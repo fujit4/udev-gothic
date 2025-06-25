@@ -26,7 +26,7 @@ jobs:
 
       - name: Build font (JP, no ligature, Nerd Font)
         run: |
-          python3 .\fonttools_script.py
+          python3 fonttools_script.py
             --jpdoc \
             --hidden-zenkaku-space \
             --nerd-font
