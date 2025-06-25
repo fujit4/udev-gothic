@@ -1,0 +1,39 @@
+name: Build and Release Font
+
+on:
+  push:
+    tags:
+      - 'v*'  # タグ push 時に発動
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y fontforge curl unzip
+          pip install -r requirements.txt
+
+      - name: Build font (JP, no ligature, Nerd Font)
+        run: |
+          ffpython .\fontforge_script.py && python3 .\fonttools_script.py
+            --jpdoc \
+            --hidden-zenkaku-space \
+            --nerd-font
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
