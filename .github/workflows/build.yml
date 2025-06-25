@@ -1,38 +1,31 @@
-name: Build and Release Font
+name: Build Font (Windows)
 
 on:
-  push:
-    tags:
-      - 'v*'  # タグ push 時に発動
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: '3.10'
 
-      - name: Install dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y fontforge curl unzip
-          pip install -r requirements.txt
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
 
-      - name: Build font (JP, no ligature, Nerd Font)
+      - name: Extract FontForge (zip)
         run: |
-          chmod 777 fontforge_script.py
-          ./fontforge_script.py   --jpdoc  --hidden-zenkaku-space --nerd-font
-          python3 fonttools_script.py
-          
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v2
-        with:
-          files: release/*.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          Expand-Archive -Path .\FontForgeBuilds.zip -DestinationPath C:\FontForge
+
+      - name: Run fontforge script
+        run: |
+          & 'C:\FontForge\bin\ffpython.exe' .\fontforge_script.py
+
+      - name: Run fonttools script
+        run: python .\fonttools_script.py
