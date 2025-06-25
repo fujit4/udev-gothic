@@ -25,7 +25,7 @@ jobs:
 
       - name: Run fontforge script
         run: |
-          & 'C:\FontForge\bin\ffpython.exe' .\fontforge_script.py
+          'C:\FontForge\bin\ffpython.exe' .\fontforge_script.py --jpdoc --nerd-font --hidden-zenkaku-space
 
       - name: Run fonttools script
         run: python .\fonttools_script.py
