@@ -26,11 +26,9 @@ jobs:
 
       - name: Build font (JP, no ligature, Nerd Font)
         run: |
+          ./fontforge_script.py   --jpdoc  --hidden-zenkaku-space --nerd-font
           python3 fonttools_script.py
-            --jpdoc \
-            --hidden-zenkaku-space \
-            --nerd-font
-
+          
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
