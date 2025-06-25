@@ -26,6 +26,7 @@ jobs:
 
       - name: Build font (JP, no ligature, Nerd Font)
         run: |
+          chmod 777 fontforge_script.py
           ./fontforge_script.py   --jpdoc  --hidden-zenkaku-space --nerd-font
           python3 fonttools_script.py
           
