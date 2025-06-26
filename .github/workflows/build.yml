@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v*'  # タグ v1.0.0 などで起動
+      - 'v*'  # タグ（v0.0.1 など）で実行
 
 jobs:
   build:
@@ -25,7 +25,6 @@ jobs:
       - name: Extract FontForge (zip)
         run: |
           Expand-Archive -Path .\FontForgeBuilds.zip -DestinationPath C:\FontForge
-          tree C:\FontForge
 
       - name: Run fontforge script
         run: |
@@ -37,11 +36,11 @@ jobs:
       - name: Zip build folder
         run: Compress-Archive -Path build\* -DestinationPath fontbuild.zip
 
-      - name: Upload to GitHub Release
+      - name: Upload to existing GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           $tag = "${{ github.ref }}" -replace 'refs/tags/', ''
-          gh release create $tag fontbuild.zip --title "Release $tag" --notes "Automated build from tag $tag"
+          gh release upload $tag fontbuild.zip --clobber
         shell: pwsh
