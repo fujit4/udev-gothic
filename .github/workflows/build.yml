@@ -22,10 +22,11 @@ jobs:
       - name: Extract FontForge (zip)
         run: |
           Expand-Archive -Path .\FontForgeBuilds.zip -DestinationPath C:\FontForge
+          tree c:\FontForge
 
       - name: Run fontforge script
         run: |
-          'C:\FontForge\bin\ffpython.exe' .\fontforge_script.py --jpdoc --nerd-font --hidden-zenkaku-space
+          & "C:\FontForge\bin\ffpython.exe" .\fontforge_script.py --jpdoc --nerd-font --hidden-zenkaku-space
 
       - name: Run fonttools script
         run: python .\fonttools_script.py
